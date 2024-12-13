@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product List</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header flex">
+        <div class="logo col-3">
+          <img src="assets/images/logo3.webp" alt="logo" />
+        </div>
+        <div class="heading col-3"><h1 class="h1">Product List</h1></div>
+        <div class="buttons col-3 flex">
+          <div class="list-view-btn view-btn">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3603/3603140.png"
+              alt="list view icon"
+            />
+          </div>
+          <div class="grid-view-btn view-btn">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3603/3603178.png"
+              alt="grid view icon"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="hero-section">
+        <div class="sidebar">
+          <a href="#"><h2 class="h2">Dashboard</h2></a>
+        </div>
+        <div class="main-content">
+          <div class="flex main-content-top-row">
+            <button
+              class="btn add-btn"
+              onclick="window.location.href='add_edit_product.html'"
+            >
+              Add
+            </button>
+          </div>
+          <div class="products flex" id="products">
+            <div class="product col-4">
+              <div class="product-top">
+                <div class="product-id">1</div>
+                <div class="product-image">
+                  <img
+                    src="https://picsum.photos/id/0/400/300"
+                    alt="laptop image"
+                  />
+                </div>
+              </div>
+              <div class="product-middle">
+                <div class="product-details flex flex-column">
+                  <div class="product-title flex flex-center">
+                    <h2 class="h2">Laptop</h2>
+                  </div>
+                  <div class="product-description">
+                    <p>
+                      Latest Laptop with powerful processor and amazing
+                      features.
+                    </p>
+                  </div>
+                  <div class="product-price">
+                    <p>&#8377;<span>78000</span></p>
+                  </div>
+                  <div class="product-quantity">
+                    <p>Quantity:<span>8</span></p>
+                  </div>
+                  <div class="tags flex flex-center">
+                    <div class="tag col-3">electronics</div>
+                    <div class="tag col-3">Windows</div>
+                    <div class="tag col-3">Gaming laptop</div>
+                  </div>
+                </div>
+              </div>
+              <div class="product-bottom flex">
+                <div class="product-bottom-left">
+                  <button class="btn edit-btn flex flex-center">Edit</button>
+                </div>
+                <div class="product-bottom-right">
+                  <button class="btn delete-btn flex flex-center">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="product col-4">
+              <div class="product-top">
+                <div class="product-image">
+                  <img
+                    src="https://picsum.photos/id/4/400/300"
+                    alt="watch image"
+                  />
+                </div>
+              </div>
+              <div class="product-middle">
+                <div class="product-details flex flex-column">
+                  <div class="product-title flex flex-center">
+                    <h2 class="h2">Analog Watch</h2>
+                  </div>
+                  <div class="product-description">
+                    <p>Watch for men with very special design.</p>
+                  </div>
+                  <div class="product-price">
+                    <p>&#8377;<span>2999</span></p>
+                  </div>
+                  <div class="product-quantity">
+                    <p>Quantity:<span>8</span></p>
+                  </div>
+                  <div class="tags flex flex-center">
+                    <div class="tag col-3">electronics</div>
+                    <div class="tag col-3">Windows</div>
+                    <div class="tag col-3">Gaming laptop</div>
+                  </div>
+                </div>
+              </div>
+              <div class="product-bottom flex">
+                <div class="product-bottom-left">
+                  <button class="btn edit-btn flex flex-center">Edit</button>
+                </div>
+                <div class="product-bottom-right">
+                  <button class="btn delete-btn flex flex-center">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="product col-4">
+              <div class="product-top">
+                <div class="product-image">
+                  <img
+                    src="https://picsum.photos/id/0/400/300"
+                    alt="laptop image"
+                  />
+                </div>
+              </div>
+              <div class="product-middle">
+                <div class="product-details flex flex-column">
+                  <div class="product-title flex flex-center">
+                    <h2 class="h2">Laptop</h2>
+                  </div>
+                  <div class="product-description">
+                    <p>
+                      Latest Laptop with powerful processor and amazing
+                      features.
+                    </p>
+                  </div>
+                  <div class="product-price">
+                    <p>&#8377;<span>78000</span></p>
+                  </div>
+                  <div class="product-quantity">
+                    <p>Quantity:<span>8</span></p>
+                  </div>
+                  <div class="tags flex flex-center">
+                    <div class="tag col-3">electronics</div>
+                    <div class="tag col-3">Windows</div>
+                    <div class="tag col-3">Gaming laptop</div>
+                  </div>
+                </div>
+              </div>
+              <div class="product-bottom flex">
+                <div class="product-bottom-left">
+                  <button class="btn edit-btn flex flex-center">Edit</button>
+                </div>
+                <div class="product-bottom-right">
+                  <button class="btn delete-btn flex flex-center">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="product col-4">
+              <div class="product-top">
+                <div class="product-image">
+                  <img
+                    src="https://picsum.photos/id/0/400/300"
+                    alt="laptop image"
+                  />
+                </div>
+              </div>
+              <div class="product-middle">
+                <div class="product-details flex flex-column">
+                  <div class="product-title flex flex-center">
+                    <h2 class="h2">Laptop</h2>
+                  </div>
+                  <div class="product-description">
+                    <p>
+                      Latest Laptop with powerful processor and amazing
+                      features.
+                    </p>
+                  </div>
+                  <div class="product-price">
+                    <p>&#8377;<span>78000</span></p>
+                  </div>
+                  <div class="product-quantity">
+                    <p>Quantity:<span>8</span></p>
+                  </div>
+                  <div class="tags flex flex-center">
+                    <div class="tag col-3">electronics</div>
+                    <div class="tag col-3">Windows</div>
+                    <div class="tag col-3">Gaming laptop</div>
+                  </div>
+                </div>
+              </div>
+              <div class="product-bottom flex">
+                <div class="product-bottom-left">
+                  <button class="btn edit-btn flex flex-center">Edit</button>
+                </div>
+                <div class="product-bottom-right">
+                  <button class="btn delete-btn flex flex-center">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="product col-4">
+              <div class="product-top">
+                <div class="product-image">
+                  <img
+                    src="https://picsum.photos/id/0/400/300"
+                    alt="laptop image"
+                  />
+                </div>
+              </div>
+              <div class="product-middle">
+                <div class="product-details flex flex-column">
+                  <div class="product-title flex flex-center">
+                    <h2 class="h2">Laptop</h2>
+                  </div>
+                  <div class="product-description">
+                    <p>
+                      Latest Laptop with powerful processor and amazing
+                      features.
+                    </p>
+                  </div>
+                  <div class="product-price">
+                    <p>&#8377;<span>78000</span></p>
+                  </div>
+                  <div class="product-quantity">
+                    <p>Quantity:<span>8</span></p>
+                  </div>
+                  <div class="tags flex flex-center">
+                    <div class="tag col-3">electronics</div>
+                    <div class="tag col-3">Windows</div>
+                    <div class="tag col-3">Gaming laptop</div>
+                  </div>
+                </div>
+              </div>
+              <div class="product-bottom flex">
+                <div class="product-bottom-left">
+                  <button class="btn edit-btn flex flex-center">Edit</button>
+                </div>
+                <div class="product-bottom-right">
+                  <button class="btn delete-btn flex flex-center">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="product col-4">
+              <div class="product-top">
+                <div class="product-image">
+                  <img
+                    src="https://picsum.photos/id/0/400/300"
+                    alt="laptop image"
+                  />
+                </div>
+              </div>
+              <div class="product-middle">
+                <div class="product-details flex flex-column">
+                  <div class="product-title flex flex-center">
+                    <h2 class="h2">Laptop</h2>
+                  </div>
+                  <div class="product-description">
+                    <p>
+                      Latest Laptop with powerful processor and amazing
+                      features.
+                    </p>
+                  </div>
+                  <div class="product-price">
+                    <p>&#8377;<span>78000</span></p>
+                  </div>
+                  <div class="product-quantity">
+                    <p>Quantity:<span>8</span></p>
+                  </div>
+                  <div class="tags flex flex-center">
+                    <div class="tag col-3">electronics</div>
+                    <div class="tag col-3">Windows</div>
+                    <div class="tag col-3">Gaming laptop</div>
+                  </div>
+                </div>
+              </div>
+              <div class="product-bottom flex">
+                <div class="product-bottom-left">
+                  <button class="btn edit-btn flex flex-center">Edit</button>
+                </div>
+                <div class="product-bottom-right">
+                  <button class="btn delete-btn flex flex-center">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pagination"></div>
+        </div>
+        <!-- Product cards with edit, delete button -->
+        <!-- Pagination  -->
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
