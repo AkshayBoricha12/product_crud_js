@@ -168,8 +168,14 @@ body {
 }
 
 .product-image {
-  border-bottom: 2px solid #9d5c63;
+  width: 100%;
+  height: 250px;
   overflow: hidden;
+  margin-bottom: 15px;
+}
+
+hr {
+  border: 1px solid #9d5c63;
 }
 
 .product {
@@ -252,4 +258,18 @@ body {
 
 #description {
   resize: vertical;
+}
+
+.form-container {
+  position: relative;
+  width: 100%;
+}
+
+.product-form {
+  position: absolute;
+  top: -5000px;
+}
+
+.tags {
+  flex-wrap: wrap;
 }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Product List</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/x-icon" href="/assets/images/logo3.webp" />
   </head>
   <body>
     <div class="container">
@@ -34,276 +35,75 @@
         </div>
         <div class="main-content">
           <div class="flex main-content-top-row">
-            <button
-              class="btn add-btn"
-              onclick="window.location.href='add_edit_product.html'"
-            >
-              Add
-            </button>
+            <button class="btn add-btn" onclick="showHideForm()">Add</button>
           </div>
-          <div class="products flex" id="products">
-            <div class="product col-4">
-              <div class="product-top">
-                <div class="product-id">1</div>
-                <div class="product-image">
-                  <img
-                    src="https://picsum.photos/id/0/400/300"
-                    alt="laptop image"
-                  />
-                </div>
+          <div class="products flex" id="products"></div>
+          <div class="form-container flex flex-center">
+            <form
+              class="product-form"
+              id="product-form"
+              onsubmit="validateForm(event)"
+            >
+              <h1 class="form-heading">Add/Edit product details</h1>
+              <div class="form-input-group">
+                <label for="image" class="form-label">Image</label>
+                <input type="url" name="image" class="form-input" id="image" />
               </div>
-              <div class="product-middle">
-                <div class="product-details flex flex-column">
-                  <div class="product-title flex flex-center">
-                    <h2 class="h2">Laptop</h2>
-                  </div>
-                  <div class="product-description">
-                    <p>
-                      Latest Laptop with powerful processor and amazing
-                      features.
-                    </p>
-                  </div>
-                  <div class="product-price">
-                    <p>&#8377;<span>78000</span></p>
-                  </div>
-                  <div class="product-quantity">
-                    <p>Quantity:<span>8</span></p>
-                  </div>
-                  <div class="tags flex flex-center">
-                    <div class="tag col-3">electronics</div>
-                    <div class="tag col-3">Windows</div>
-                    <div class="tag col-3">Gaming laptop</div>
-                  </div>
-                </div>
+              <div class="form-input-group">
+                <label for="name" class="form-label">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  class="form-input"
+                  required
+                />
               </div>
-              <div class="product-bottom flex">
-                <div class="product-bottom-left">
-                  <button class="btn edit-btn flex flex-center">Edit</button>
-                </div>
-                <div class="product-bottom-right">
-                  <button class="btn delete-btn flex flex-center">
-                    Delete
-                  </button>
-                </div>
+              <div class="form-input-group">
+                <label for="description" class="form-label">Description</label>
+                <textarea
+                  name="description"
+                  id="description"
+                  class="form-input"
+                  rows="5"
+                ></textarea>
               </div>
-            </div>
-            <div class="product col-4">
-              <div class="product-top">
-                <div class="product-image">
-                  <img
-                    src="https://picsum.photos/id/4/400/300"
-                    alt="watch image"
-                  />
-                </div>
+              <div class="form-input-group">
+                <label for="price" class="form-label">Price (INR)</label>
+                <input
+                  type="number"
+                  class="form-input number-input"
+                  name="price"
+                  id="price"
+                  required
+                />
               </div>
-              <div class="product-middle">
-                <div class="product-details flex flex-column">
-                  <div class="product-title flex flex-center">
-                    <h2 class="h2">Analog Watch</h2>
-                  </div>
-                  <div class="product-description">
-                    <p>Watch for men with very special design.</p>
-                  </div>
-                  <div class="product-price">
-                    <p>&#8377;<span>2999</span></p>
-                  </div>
-                  <div class="product-quantity">
-                    <p>Quantity:<span>8</span></p>
-                  </div>
-                  <div class="tags flex flex-center">
-                    <div class="tag col-3">electronics</div>
-                    <div class="tag col-3">Windows</div>
-                    <div class="tag col-3">Gaming laptop</div>
-                  </div>
-                </div>
+              <div class="form-input-group">
+                <label for="quantity" class="form-label">Quantity</label>
+                <input
+                  type="number"
+                  class="form-input number-input"
+                  name="quantity"
+                  id="quantity"
+                />
               </div>
-              <div class="product-bottom flex">
-                <div class="product-bottom-left">
-                  <button class="btn edit-btn flex flex-center">Edit</button>
-                </div>
-                <div class="product-bottom-right">
-                  <button class="btn delete-btn flex flex-center">
-                    Delete
-                  </button>
-                </div>
+              <div class="form-input-group">
+                <label for="tags" class="form-label"
+                  >Tags (comma-separated)</label
+                >
+                <input type="text" class="form-input" name="tags" id="tags" />
               </div>
-            </div>
-            <div class="product col-4">
-              <div class="product-top">
-                <div class="product-image">
-                  <img
-                    src="https://picsum.photos/id/0/400/300"
-                    alt="laptop image"
-                  />
-                </div>
+              <div class="form-actions flex flex-center">
+                <button type="submit" class="btn submit-btn">Submit</button>
+                <button
+                  type="reset"
+                  class="btn cancel-btn"
+                  onclick="showHideForm()"
+                >
+                  Cancel
+                </button>
               </div>
-              <div class="product-middle">
-                <div class="product-details flex flex-column">
-                  <div class="product-title flex flex-center">
-                    <h2 class="h2">Laptop</h2>
-                  </div>
-                  <div class="product-description">
-                    <p>
-                      Latest Laptop with powerful processor and amazing
-                      features.
-                    </p>
-                  </div>
-                  <div class="product-price">
-                    <p>&#8377;<span>78000</span></p>
-                  </div>
-                  <div class="product-quantity">
-                    <p>Quantity:<span>8</span></p>
-                  </div>
-                  <div class="tags flex flex-center">
-                    <div class="tag col-3">electronics</div>
-                    <div class="tag col-3">Windows</div>
-                    <div class="tag col-3">Gaming laptop</div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-bottom flex">
-                <div class="product-bottom-left">
-                  <button class="btn edit-btn flex flex-center">Edit</button>
-                </div>
-                <div class="product-bottom-right">
-                  <button class="btn delete-btn flex flex-center">
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="product col-4">
-              <div class="product-top">
-                <div class="product-image">
-                  <img
-                    src="https://picsum.photos/id/0/400/300"
-                    alt="laptop image"
-                  />
-                </div>
-              </div>
-              <div class="product-middle">
-                <div class="product-details flex flex-column">
-                  <div class="product-title flex flex-center">
-                    <h2 class="h2">Laptop</h2>
-                  </div>
-                  <div class="product-description">
-                    <p>
-                      Latest Laptop with powerful processor and amazing
-                      features.
-                    </p>
-                  </div>
-                  <div class="product-price">
-                    <p>&#8377;<span>78000</span></p>
-                  </div>
-                  <div class="product-quantity">
-                    <p>Quantity:<span>8</span></p>
-                  </div>
-                  <div class="tags flex flex-center">
-                    <div class="tag col-3">electronics</div>
-                    <div class="tag col-3">Windows</div>
-                    <div class="tag col-3">Gaming laptop</div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-bottom flex">
-                <div class="product-bottom-left">
-                  <button class="btn edit-btn flex flex-center">Edit</button>
-                </div>
-                <div class="product-bottom-right">
-                  <button class="btn delete-btn flex flex-center">
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="product col-4">
-              <div class="product-top">
-                <div class="product-image">
-                  <img
-                    src="https://picsum.photos/id/0/400/300"
-                    alt="laptop image"
-                  />
-                </div>
-              </div>
-              <div class="product-middle">
-                <div class="product-details flex flex-column">
-                  <div class="product-title flex flex-center">
-                    <h2 class="h2">Laptop</h2>
-                  </div>
-                  <div class="product-description">
-                    <p>
-                      Latest Laptop with powerful processor and amazing
-                      features.
-                    </p>
-                  </div>
-                  <div class="product-price">
-                    <p>&#8377;<span>78000</span></p>
-                  </div>
-                  <div class="product-quantity">
-                    <p>Quantity:<span>8</span></p>
-                  </div>
-                  <div class="tags flex flex-center">
-                    <div class="tag col-3">electronics</div>
-                    <div class="tag col-3">Windows</div>
-                    <div class="tag col-3">Gaming laptop</div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-bottom flex">
-                <div class="product-bottom-left">
-                  <button class="btn edit-btn flex flex-center">Edit</button>
-                </div>
-                <div class="product-bottom-right">
-                  <button class="btn delete-btn flex flex-center">
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="product col-4">
-              <div class="product-top">
-                <div class="product-image">
-                  <img
-                    src="https://picsum.photos/id/0/400/300"
-                    alt="laptop image"
-                  />
-                </div>
-              </div>
-              <div class="product-middle">
-                <div class="product-details flex flex-column">
-                  <div class="product-title flex flex-center">
-                    <h2 class="h2">Laptop</h2>
-                  </div>
-                  <div class="product-description">
-                    <p>
-                      Latest Laptop with powerful processor and amazing
-                      features.
-                    </p>
-                  </div>
-                  <div class="product-price">
-                    <p>&#8377;<span>78000</span></p>
-                  </div>
-                  <div class="product-quantity">
-                    <p>Quantity:<span>8</span></p>
-                  </div>
-                  <div class="tags flex flex-center">
-                    <div class="tag col-3">electronics</div>
-                    <div class="tag col-3">Windows</div>
-                    <div class="tag col-3">Gaming laptop</div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-bottom flex">
-                <div class="product-bottom-left">
-                  <button class="btn edit-btn flex flex-center">Edit</button>
-                </div>
-                <div class="product-bottom-right">
-                  <button class="btn delete-btn flex flex-center">
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
+            </form>
           </div>
           <div class="pagination"></div>
         </div>
