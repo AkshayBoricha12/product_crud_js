@@ -261,13 +261,8 @@ hr {
 }
 
 .form-container {
-  position: relative;
   width: 100%;
-}
-
-.product-form {
-  position: absolute;
-  top: -5000px;
+  display: none;
 }
 
 .tags {

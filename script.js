@@ -1,32 +1,40 @@
 let products = document.getElementById("products");
 let productForm = document.getElementById("product-form");
 let formContainer = document.querySelector(".form-container");
-let ids = [];
-let id;
 let productCollection = JSON.parse(localStorage.getItem("products")) || [];
+let id = productCollection.length + 1;
 
-for (const product of productCollection) {
-  ids.push(product.id);
-}
-
-let maximumID = Math.max.apply(null, ids);
-if (ids.length === 0 || maximumID === -Infinity) {
-  id = 1;
-} else {
-  id = maximumID + 1;
-}
-
-function addProduct(event) {
+function addProduct(event, productID) {
   event.preventDefault();
+  console.log(productID);
+  if (productID === -1) {
+    // add product
+    let data = new FormData(event.target);
+    let product = Object.fromEntries(data.entries());
+    product.id = id;
+    productCollection.push(product);
+    id++;
+  } else {
+    // edit product
 
-  let data = new FormData(event.target);
-  let product = Object.fromEntries(data.entries());
-  product.id = id;
-  productCollection.push(product);
+    let formInputs = productForm.getElementsByClassName("form-input");
+    let values = Object.values(productCollection[productID]);
 
+    for (let i = 0; i < 6; i++) {
+      formInputs[i].value = values[i];
+    }
+
+    productForm.value = values;
+
+    // productCollection[productID].image = formInputs[0].value;
+    // productCollection[productID].name = formInputs[1].value;
+    // productCollection[productID].description = formInputs[2].value;
+    // productCollection[productID].price = formInputs[3].value;
+    // productCollection[productID].quantity = formInputs[4].value;
+    // productCollection[productID].tags = formInputs[5].value;
+  }
   localStorage.setItem("products", JSON.stringify(productCollection));
   getData();
-  id++;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -36,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function getData() {
   let myProducts = JSON.parse(localStorage.getItem("products"));
 
-  if (products && myProducts && myProducts.length > 0) {
+  if (myProducts && myProducts.length > 0) {
     products.innerHTML = "";
     for (const product of myProducts) {
       let div = document.createElement("div");
@@ -85,33 +93,50 @@ function getData() {
                 </div>`;
       products.appendChild(div);
     }
-  } else {
-    console.log("Something went wrong");
+  }
+  let editBtn = document.querySelectorAll(".edit-btn");
+  let deleteBtn = document.querySelectorAll(".delete-btn");
+
+  for (let i = 0; i < deleteBtn.length; i++) {
+    deleteBtn[i].addEventListener("click", () => {
+      deleteProduct(i);
+    });
+    editBtn[i].addEventListener("click", (event) => {
+      formContainer.style.display = "flex";
+      editProduct(event, i);
+    });
   }
 }
 
-function editProduct() {}
-function deleteProduct() {}
+function editProduct(event, id) {
+  addProduct(event, id);
+}
+
+function deleteProduct(id) {
+  productCollection.splice(id, 1);
+  localStorage.setItem("products", JSON.stringify(productCollection));
+  getData();
+}
 function validateForm(event) {
-  addProduct(event);
+  addProduct(event, -1);
   productForm.reset();
 }
 
 function showHideForm() {
-  if (productForm.style.top != "0px") {
-    productForm.style.top = "0px";
+  if (formContainer.style.display === "none") {
     formContainer.style.display = "flex";
   } else {
-    productForm.style.display = "-5000px";
     formContainer.style.display = "none";
   }
 }
 
 function tagTemplate(tags) {
-  tags = tags.split(",");
-  let tagsString = "";
-  tags.forEach((tag) => {
-    tagsString += `<div class="tag col-3">${tag}</div>`;
-  });
-  return tagsString;
+  if (tags != "" && typeof tags === "string") {
+    tags = tags.split(",");
+    let tagsString = "";
+    tags.forEach((tag) => {
+      tagsString += `<div class="tag col-3">${tag}</div>`;
+    });
+    return tagsString;
+  }
 }
