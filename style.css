@@ -265,6 +265,17 @@ hr {
   display: none;
 }
 
-.tags {
+.tags,
+.product-description {
   flex-wrap: wrap;
+}
+
+.input-error {
+  border: 2px solid red;
+}
+
+.input-error-message {
+  color: red;
+  text-align: end;
+  font-size: larger;
 }
