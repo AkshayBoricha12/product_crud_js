@@ -57,7 +57,7 @@ function getData() {
       div.innerHTML = `
               <div class="product-top">
                 <div class="product-id">1</div>
-                <div class="product-image">
+                <div class="product-image flex flex-center">
                   <img
                     src="${product.image}"
                     alt="image"
@@ -149,7 +149,9 @@ function validateForm(event) {
     }
   }
 
-  if (!/^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg))$/i.test(image.trim())) {
+  if (
+    !/^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|svg))(\?.*)?$/i.test(image.trim())
+  ) {
     allInputsValid = manageFormInputErrors(0, "Please enter valid image URL.");
   }
 
@@ -204,6 +206,7 @@ function manageFormInputErrors(inputFieldNo, errorMessage) {
 function showHideForm() {
   if (formContainer.style.display === "none") {
     formContainer.style.display = "flex";
+    productForm.reset();
   } else {
     formContainer.style.display = "none";
   }
