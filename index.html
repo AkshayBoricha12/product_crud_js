@@ -14,14 +14,17 @@
           <img src="assets/images/logo3.webp" alt="logo" />
         </div>
         <div class="heading col-3"><h1 class="h1">Product List</h1></div>
-        <div class="buttons col-3 flex">
-          <div class="list-view-btn view-btn">
+        <div class="view-buttons col-3 flex">
+          <div class="list-view-btn view-btn" onclick="showListView()">
             <img
               src="https://cdn-icons-png.flaticon.com/512/3603/3603140.png"
               alt="list view icon"
             />
           </div>
-          <div class="grid-view-btn view-btn">
+          <div
+            class="grid-view-btn view-btn active-view"
+            onclick="showGridView()"
+          >
             <img
               src="https://cdn-icons-png.flaticon.com/512/3603/3603178.png"
               alt="grid view icon"
@@ -34,8 +37,21 @@
           <a href="#"><h2 class="h2">Dashboard</h2></a>
         </div>
         <div class="main-content">
-          <div class="flex main-content-top-row">
-            <button class="btn add-btn" onclick="showHideForm()">Add</button>
+          <div class="flex main-content-top-row flex-center">
+            <form action="" class="searchForm">
+              <input
+                type="text"
+                placeholder="Search product"
+                class="form-input"
+                onkeyup="searchProduct(event)"
+              />
+            </form>
+            <div class="sort-by-group">
+              <div class="btn sort-btn flex flex-center">Sort by</div>
+              <div class="sort-by" onclick="sortData('name')">Name</div>
+              <div class="sort-by" onclick="sortData('price')">Price</div>
+            </div>
+            <button class="btn add-btn">Add</button>
           </div>
           <div class="products flex" id="products"></div>
           <div class="form-container flex flex-center">

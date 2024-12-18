@@ -2,9 +2,25 @@ let products = document.getElementById("products");
 let productForm = document.getElementById("product-form");
 let formContainer = document.querySelector(".form-container");
 let formInputs = document.querySelectorAll(".form-input");
+let viewButtons = document.querySelectorAll(".view-btn");
+let sortingOptions = document.querySelectorAll(".sort-by");
 let productCollection = JSON.parse(localStorage.getItem("products")) || [];
 let id = productCollection.length + 1;
 let editingProductID = null;
+
+function showListView() {
+  if (viewButtons[1].classList.contains("active-view")) {
+    viewButtons[1].classList.remove("active-view");
+    viewButtons[0].classList.add("active-view");
+  }
+}
+
+function showGridView() {
+  if (viewButtons[0].classList.contains("active-view")) {
+    viewButtons[0].classList.remove("active-view");
+    viewButtons[1].classList.add("active-view");
+  }
+}
 
 function setProduct(event) {
   event.preventDefault();
@@ -24,7 +40,6 @@ function setProduct(event) {
     productCollection.push(product);
   }
   productForm.reset();
-  setID();
 
   localStorage.setItem("products", JSON.stringify(productCollection));
   getData();
@@ -32,14 +47,18 @@ function setProduct(event) {
 
 document.addEventListener("DOMContentLoaded", () => {
   getData();
+  document.querySelector(".add-btn").addEventListener("click", showHideForm);
+  document
+    .querySelector(".sort-btn")
+    .addEventListener("click", toggleSortingOptions);
 });
 
 function fillTheForm(i) {
   formContainer.style.display = "flex";
   editingProductID = i - 1;
   let objValues = Object.values(productCollection[i - 1]);
-  for (let index = 0; index < formInputs.length; index++) {
-    formInputs[index].value = objValues[index];
+  for (let index = 1; index < formInputs.length; index++) {
+    formInputs[index].value = objValues[index - 1];
   }
 }
 
@@ -52,7 +71,7 @@ function getData() {
     products.innerHTML = "";
     for (const product of myProducts) {
       let div = document.createElement("div");
-      div.classList += "product col-4";
+      div.classList += "product";
 
       div.innerHTML = `
               <div class="product-top">
@@ -67,16 +86,17 @@ function getData() {
               <hr />
               <div class="product-middle">
                 <div class="product-details flex flex-column">
-                  <div class="product-title flex flex-center">
-                    <h2 class="h2">${product.name
-                      .split(" ")
-                      .map((element) => {
-                        return (
-                          element[0].toUpperCase() +
-                          element.slice(1).toLowerCase()
-                        );
-                      })
-                      .join(" ")}</h2>
+                  <div class="product-title">
+                    <h3 class="h3
+                     ">${product.name
+                       .split(" ")
+                       .map((element) => {
+                         return (
+                           element[0].toUpperCase() +
+                           element.slice(1).toLowerCase()
+                         );
+                       })
+                       .join(" ")}</h3>
                   </div>
                   <div class="product-description flex">
                     <p>
@@ -92,19 +112,19 @@ function getData() {
                   <div class="product-quantity">
                     <p>Quantity:<span>${product.quantity}</span></p>
                   </div>
-                  <div class="tags flex flex-center">
-                  ${tagTemplate(product.tags)}
+                  <div class="tags flex">
+                  ${tagTemplate(product.tags)}  
                   </div>
                 </div>
               </div>
               <div class="product-bottom flex">
                 <div class="product-bottom-left">
-                  <button class="btn edit-btn flex flex-center" data-id="${
+                  <button class="btn edit-btn data-id="${
                     product.id
                   }" onclick="fillTheForm(${product.id})">Edit</button>
                 </div>
                 <div class="product-bottom-right">
-                  <button class="btn delete-btn flex flex-center" data-id="${
+                  <button class="btn delete-btn" data-id="${
                     product.id
                   }" onclick="deleteProduct(event)">
                     Delete
@@ -123,11 +143,13 @@ function setID() {
 }
 
 function deleteProduct(event) {
-  let removeID = parseInt(event.target.getAttribute("data-id"));
-  productCollection.splice(removeID - 1, 1);
-  localStorage.setItem("products", JSON.stringify(productCollection));
-  setID();
-  getData();
+  if (confirm("Do you want to delete?")) {
+    let removeID = parseInt(event.target.getAttribute("data-id"));
+    productCollection.splice(removeID - 1, 1);
+    localStorage.setItem("products", JSON.stringify(productCollection));
+    setID();
+    getData();
+  }
 }
 
 function validateForm(event) {
@@ -204,7 +226,7 @@ function manageFormInputErrors(inputFieldNo, errorMessage) {
 }
 
 function showHideForm() {
-  if (formContainer.style.display === "none") {
+  if (getComputedStyle(formContainer).display === "none") {
     formContainer.style.display = "flex";
     productForm.reset();
   } else {
@@ -217,8 +239,52 @@ function tagTemplate(tags) {
   if (tags && typeof tags === "string") {
     tags = tags.split(",");
     tags.forEach((tag) => {
-      tagsString += `<div class="tag col-3">${tag.trim()}</div>`;
+      tagsString += `<div class="tag">${tag.trim()}</div>`;
     });
     return tagsString;
+  }
+}
+
+function searchProduct(event) {
+  let searchInput = event.target.value.toLowerCase().trim();
+
+  productCollection.forEach((product, index) => {
+    let productDiv = products.children[index];
+
+    let nameMatch = product.name.toLowerCase().includes(searchInput);
+    let tagsMatch =
+      product.tags && product.tags.toLowerCase().includes(searchInput);
+
+    if (nameMatch || tagsMatch) {
+      productDiv.style.display = "";
+    } else {
+      productDiv.style.display = "none";
+    }
+  });
+}
+
+function toggleSortingOptions() {
+  for (const option of sortingOptions) {
+    if (getComputedStyle(option).display === "none") {
+      option.style.display = "block";
+    } else {
+      option.style.display = "none";
+    }
+  }
+}
+
+function sortData(sortBy) {
+  if (sortBy === "name") {
+    productCollection.sort((a, b) => a.name.localeCompare(b.name));
+    localStorage.setItem("products", JSON.stringify(productCollection));
+    setID();
+    getData();
+  }
+
+  if (sortBy === "price") {
+    productCollection.sort((a, b) => parseInt(a.price) - parseInt(b.price));
+    localStorage.setItem("products", JSON.stringify(productCollection));
+    setID();
+    getData();
   }
 }
