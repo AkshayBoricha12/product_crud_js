@@ -405,6 +405,10 @@ hr {
   background-color: grey !important;
 }
 
+.pagination-container {
+  user-select: none;
+}
+
 /* Media Queries */
 
 @media (max-width: 1440px) {

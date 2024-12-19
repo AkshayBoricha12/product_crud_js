@@ -255,19 +255,80 @@ function tagTemplate(tags) {
 function searchProduct(event) {
   let searchInput = event.target.value.toLowerCase().trim();
 
-  productCollection.forEach((product, index) => {
-    let productDiv = products.children[index];
+  if (searchInput === "") {
+    getData();
+    return;
+  }
 
-    let nameMatch = product.name.toLowerCase().includes(searchInput);
-    let tagsMatch =
+  const filteredProducts = productCollection.filter((product) => {
+    const nameMatch = product.name.toLowerCase().includes(searchInput);
+    const tagsMatch =
       product.tags && product.tags.toLowerCase().includes(searchInput);
-
-    if (nameMatch || tagsMatch) {
-      productDiv.style.display = "";
-    } else {
-      productDiv.style.display = "none";
-    }
+    return nameMatch || tagsMatch;
   });
+
+  if (filteredProducts.length === 0) {
+    products.innerHTML = `<h1>No matching products found.</h1>`;
+  } else {
+    products.innerHTML = "";
+    for (const product of filteredProducts) {
+      let div = document.createElement("div");
+      div.classList.add("product");
+
+      div.innerHTML = `
+              <div class="product-top">
+                <div class="product-id">${product.id}</div>
+                <div class="product-image flex flex-center">
+                  <img
+                    src="${product.image}"
+                    alt="image"
+                  />
+                </div>
+              </div>
+              <hr />
+              <div class="product-middle">
+                <div class="product-details flex flex-column">
+                  <div class="product-title">
+                    <h3 class="h3">${product.name
+                      .split(" ")
+                      .map(
+                        (element) =>
+                          element[0].toUpperCase() +
+                          element.slice(1).toLowerCase()
+                      )
+                      .join(" ")}</h3>
+                  </div>
+                  <div class="product-description flex">
+                    <p>${
+                      product.description[0].toUpperCase() +
+                      product.description.slice(1).toLowerCase()
+                    }</p>
+                  </div>
+                  <div class="product-price">
+                    <p>Price:&#8377;<span>${product.price}</span></p>
+                  </div>
+                  <div class="product-quantity">
+                    <p>Quantity:<span>${product.quantity}</span></p>
+                  </div>
+                  <div class="tags flex">
+                  ${tagTemplate(product.tags)}  
+                  </div>
+                </div>
+              </div>
+              <div class="product-bottom flex">
+                <div class="product-bottom-left">
+                  <button class="btn edit-btn" data-id="${
+                    product.id
+                  }" onclick="fillTheForm(${product.id})">Edit</button>
+                </div>
+                <div class="product-bottom-right">
+                  <button class="btn delete-btn" data-id="${
+                    product.id
+                  }" onclick="deleteProduct(event)">Delete</button>
+                </div>`;
+      products.appendChild(div);
+    }
+  }
 }
 
 function toggleSortingOptions() {
@@ -324,7 +385,7 @@ function managePagination() {
   let paginationDiv = document.querySelector(".pagination");
   if (!paginationDiv) {
     paginationDiv = document.createElement("div");
-    paginationDiv.className = "pagination flex flex-center";
+    paginationDiv.className = "pagination flex fle x-center";
     products.parentElement.appendChild(paginationDiv);
   }
 
