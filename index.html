@@ -10,6 +10,9 @@
   <body>
     <div class="container">
       <div class="header flex">
+        <div class="sidebar-toggle-btn btn">
+          <i class="fa-solid fa-bars"></i>
+        </div>
         <div class="logo col-3">
           <img src="assets/images/logo3.webp" alt="logo" />
         </div>
@@ -47,13 +50,18 @@
               />
             </form>
             <div class="sort-by-group">
-              <div class="btn sort-btn flex flex-center">Sort by</div>
-              <div class="sort-by" onclick="sortData('name')">Name</div>
-              <div class="sort-by" onclick="sortData('price')">Price</div>
+              <div class="btn sort-btn flex flex-center br-none">Sort by</div>
+              <div class="sort-by-options">
+                <div class="sort-by" onclick="sortData('name')">Name</div>
+                <div class="sort-by" onclick="sortData('price')">Price</div>
+              </div>
             </div>
             <button class="btn add-btn">Add</button>
           </div>
           <div class="products flex" id="products"></div>
+          <div class="pagination-container">
+            <div class="pagination flex flex-center" id="pagination"></div>
+          </div>
           <div class="form-container flex flex-center">
             <form
               class="product-form"
@@ -121,12 +129,13 @@
               </div>
             </form>
           </div>
-          <div class="pagination"></div>
         </div>
-        <!-- Product cards with edit, delete button -->
-        <!-- Pagination  -->
       </div>
     </div>
-    <script src="script.js" defer></script>
+    <script src="script.js"></script>
+    <script
+      src="https://kit.fontawesome.com/c1f77fdc81.js"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
