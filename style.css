@@ -1,5 +1,4 @@
 /* Utility classes */
-
 .flex {
   display: flex;
 }
@@ -223,6 +222,7 @@ hr {
   flex: 1 1 calc(20% - 45px);
   max-width: calc(20% - 45px);
   min-width: 300px;
+  position: relative;
 }
 
 .product:hover {
@@ -507,4 +507,44 @@ hr {
   .product-bottom-right {
     width: 100%;
   }
+}
+
+.list-view-product {
+  width: 100% !important;
+  flex: 1 1 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  height: 400px;
+}
+
+.list-view-product .product-top,
+.list-view-product .product-middle,
+.list-view-product .product-bottom {
+  width: 33%;
+}
+
+.list-view-product .product-details {
+  width: 100%;
+}
+
+.list-view-product .product-bottom {
+  align-items: flex-end;
+  gap: 15px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.list-view-product .product-top {
+  height: 200px;
+  width: 250px;
+}
+
+.list-view-product:hover {
+  transform: none;
+}
+
+.list-view-product .btn {
+  padding: 20px 0;
 }

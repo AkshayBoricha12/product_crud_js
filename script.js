@@ -15,6 +15,8 @@ function showListView() {
   if (viewButtons[1].classList.contains("active-view")) {
     viewButtons[1].classList.remove("active-view");
     viewButtons[0].classList.add("active-view");
+    viewButtons[0].classList.add("list-view-activated");
+    getDataInListView();
   }
 }
 
@@ -22,6 +24,82 @@ function showGridView() {
   if (viewButtons[0].classList.contains("active-view")) {
     viewButtons[0].classList.remove("active-view");
     viewButtons[1].classList.add("active-view");
+    viewButtons[0].classList.remove("list-view-activated");
+    products.style.flexDirection = "row";
+    getData();
+  }
+}
+
+function getDataInListView() {
+  let myProducts = JSON.parse(localStorage.getItem("products"));
+  const productsPerPage = 10;
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const endIndex = currentPage * productsPerPage;
+
+  if (productCollection.length === 0) {
+    products.innerHTML = `<h1>No products available. Add a product to get started!</h1>`;
+    localStorage.removeItem("products");
+  } else if (myProducts && myProducts.length > 0) {
+    products.innerHTML = "";
+    const paginatedProducts = myProducts.slice(startIndex, endIndex);
+
+    for (const product of paginatedProducts) {
+      products.style.flexDirection = "column";
+      let div = document.createElement("div");
+      div.className += "product flex list-view-product";
+      div.innerHTML = `
+              <div class="product-top">
+                <div class="product-id">${product.id}</div>
+                <div class="product-image">
+                  <img
+                    src="${product.image}"
+                    alt="image"
+                  />
+                </div>
+              </div>
+              <hr />
+              <div class="product-middle flex">
+                <div class="product-details flex flex-column">
+                  <div class="product-title">
+                    <h3 class="h3">${product.name
+                      .split(" ")
+                      .map(
+                        (element) =>
+                          element[0].toUpperCase() +
+                          element.slice(1).toLowerCase()
+                      )
+                      .join(" ")}</h3>
+                  </div>
+                  <div class="product-description">
+                    <p>${
+                      product.description[0].toUpperCase() +
+                      product.description.slice(1).toLowerCase()
+                    }</p>
+                  </div>
+                  <div class="product-price">
+                    <p>Price:&#8377;<span>${product.price}</span></p>
+                  </div>
+                  <div class="product-quantity">
+                    <p>Quantity:<span>${product.quantity}</span></p>
+                  </div>
+                  <div class="tags flex">
+                  ${tagTemplate(product.tags)}  
+                  </div>
+                </div>
+              </div>
+              <div class="product-bottom flex flex-column">
+                <div class="product-bottom-left">
+                  <button class="btn edit-btn" data-id="${
+                    product.id
+                  }" onclick="fillTheForm(${product.id})">Edit</button>
+                </div>
+                <div class="product-bottom-right">
+                  <button class="btn delete-btn" data-id="${
+                    product.id
+                  }" onclick="deleteProduct(event)">Delete</button>
+                </div>`;
+      products.appendChild(div);
+    }
   }
 }
 
@@ -41,11 +119,19 @@ function setProduct(event) {
     // Add product
     product.id = productCollection.length + 1;
     productCollection.push(product);
-  }
-  productForm.reset();
 
+    const productsPerPage = 10;
+    currentPage = Math.ceil(productCollection.length / productsPerPage);
+  }
+
+  productForm.reset();
   localStorage.setItem("products", JSON.stringify(productCollection));
-  getData();
+  if (viewButtons[0].classList.contains("list-view-activated")) {
+    getDataInListView();
+  } else {
+    getData();
+  }
+  managePagination();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -60,11 +146,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function fillTheForm(i) {
   formContainer.style.display = "flex";
+
   editingProductID = i - 1;
+
   let objValues = Object.values(productCollection[i - 1]);
   for (let index = 1; index < formInputs.length; index++) {
     formInputs[index].value = objValues[index - 1];
   }
+
+  formInputs[1].focus();
 }
 
 function getData() {
@@ -154,7 +244,11 @@ function deleteProduct(event) {
     localStorage.setItem("products", JSON.stringify(productCollection));
     productForm.reset();
     setID();
-    getData();
+    if (viewButtons[0].classList.contains("list-view-activated")) {
+      getDataInListView();
+    } else {
+      getData();
+    }
     managePagination();
   }
 }
@@ -236,6 +330,7 @@ function showHideForm() {
   if (getComputedStyle(formContainer).display === "none") {
     formContainer.style.display = "flex";
     productForm.reset();
+    formInputs[1].focus();
   } else {
     formContainer.style.display = "none";
   }
@@ -256,26 +351,83 @@ function searchProduct(event) {
   let searchInput = event.target.value.toLowerCase().trim();
 
   if (searchInput === "") {
-    getData();
-    return;
-  }
-
-  const filteredProducts = productCollection.filter((product) => {
-    const nameMatch = product.name.toLowerCase().includes(searchInput);
-    const tagsMatch =
-      product.tags && product.tags.toLowerCase().includes(searchInput);
-    return nameMatch || tagsMatch;
-  });
-
-  if (filteredProducts.length === 0) {
-    products.innerHTML = `<h1>No matching products found.</h1>`;
+    if (viewButtons[0].classList.contains("list-view-activated")) {
+      getDataInListView();
+    } else {
+      getData();
+    }
   } else {
-    products.innerHTML = "";
-    for (const product of filteredProducts) {
-      let div = document.createElement("div");
-      div.classList.add("product");
+    const filteredProducts = productCollection.filter((product) => {
+      const nameMatch = product.name.toLowerCase().includes(searchInput);
+      const tagsMatch =
+        product.tags && product.tags.toLowerCase().includes(searchInput);
+      return nameMatch || tagsMatch;
+    });
 
-      div.innerHTML = `
+    if (filteredProducts.length === 0) {
+      products.innerHTML = `<h1>No matching products found.</h1>`;
+    } else {
+      products.innerHTML = "";
+      for (const product of filteredProducts) {
+        let div = document.createElement("div");
+        div.classList.add("product");
+
+        if (viewButtons[0].classList.contains("list-view-activated")) {
+          products.style.flexDirection = "column";
+          div.className += " flex list-view-product";
+          div.innerHTML = `
+              <div class="product-top">
+                <div class="product-id">${product.id}</div>
+                <div class="product-image">
+                  <img
+                    src="${product.image}"
+                    alt="image"
+                  />
+                </div>
+              </div>
+              <hr />
+              <div class="product-middle flex">
+                <div class="product-details flex flex-column">
+                  <div class="product-title">
+                    <h3 class="h3">${product.name
+                      .split(" ")
+                      .map(
+                        (element) =>
+                          element[0].toUpperCase() +
+                          element.slice(1).toLowerCase()
+                      )
+                      .join(" ")}</h3>
+                  </div>
+                  <div class="product-description">
+                    <p>${
+                      product.description[0].toUpperCase() +
+                      product.description.slice(1).toLowerCase()
+                    }</p>
+                  </div>
+                  <div class="product-price">
+                    <p>Price:&#8377;<span>${product.price}</span></p>
+                  </div>
+                  <div class="product-quantity">
+                    <p>Quantity:<span>${product.quantity}</span></p>
+                  </div>
+                  <div class="tags flex">
+                  ${tagTemplate(product.tags)}  
+                  </div>
+                </div>
+              </div>
+              <div class="product-bottom flex flex-column">
+                <div class="product-bottom-left">
+                  <button class="btn edit-btn" data-id="${
+                    product.id
+                  }" onclick="fillTheForm(${product.id})">Edit</button>
+                </div>
+                <div class="product-bottom-right">
+                  <button class="btn delete-btn" data-id="${
+                    product.id
+                  }" onclick="deleteProduct(event)">Delete</button>
+                </div>`;
+        } else {
+          div.innerHTML = `
               <div class="product-top">
                 <div class="product-id">${product.id}</div>
                 <div class="product-image flex flex-center">
@@ -326,7 +478,9 @@ function searchProduct(event) {
                     product.id
                   }" onclick="deleteProduct(event)">Delete</button>
                 </div>`;
-      products.appendChild(div);
+        }
+        products.appendChild(div);
+      }
     }
   }
 }
@@ -346,14 +500,22 @@ function sortData(sortBy) {
     productCollection.sort((a, b) => a.name.localeCompare(b.name));
     localStorage.setItem("products", JSON.stringify(productCollection));
     setID();
-    getData();
+    if (viewButtons[0].classList.contains("list-view-activated")) {
+      getDataInListView();
+    } else {
+      getData();
+    }
   }
 
   if (sortBy === "price") {
     productCollection.sort((a, b) => parseInt(a.price) - parseInt(b.price));
     localStorage.setItem("products", JSON.stringify(productCollection));
     setID();
-    getData();
+    if (viewButtons[0].classList.contains("list-view-activated")) {
+      getDataInListView();
+    } else {
+      getData();
+    }
   }
 }
 
@@ -421,12 +583,20 @@ function changePage(direction) {
   } else if (currentPage > Math.ceil(productCollection.length / 10)) {
     currentPage = Math.ceil(productCollection.length / 10);
   }
-  getData();
+  if (viewButtons[0].classList.contains("list-view-activated")) {
+    getDataInListView();
+  } else {
+    getData();
+  }
   managePagination();
 }
 
 function gotoPage(page) {
   currentPage = page;
-  getData();
+  if (viewButtons[0].classList.contains("list-view-activated")) {
+    getDataInListView();
+  } else {
+    getData();
+  }
   managePagination();
 }
