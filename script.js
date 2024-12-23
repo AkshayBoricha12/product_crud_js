@@ -10,13 +10,16 @@ let productCollection = JSON.parse(localStorage.getItem("products")) || [];
 let id = productCollection.length + 1;
 let editingProductID = null;
 let currentPage = 1;
+const productsPerPage = 10;
+let ListViewActive = false;
 
 function showListView() {
   if (viewButtons[1].classList.contains("active-view")) {
     viewButtons[1].classList.remove("active-view");
     viewButtons[0].classList.add("active-view");
     viewButtons[0].classList.add("list-view-activated");
-    getDataInListView();
+    ListViewActive = true;
+    getData();
   }
 }
 
@@ -25,81 +28,8 @@ function showGridView() {
     viewButtons[0].classList.remove("active-view");
     viewButtons[1].classList.add("active-view");
     viewButtons[0].classList.remove("list-view-activated");
-    products.style.flexDirection = "row";
+    ListViewActive = false;
     getData();
-  }
-}
-
-function getDataInListView() {
-  let myProducts = JSON.parse(localStorage.getItem("products"));
-  const productsPerPage = 10;
-  const startIndex = (currentPage - 1) * productsPerPage;
-  const endIndex = currentPage * productsPerPage;
-
-  if (productCollection.length === 0) {
-    products.innerHTML = `<h1>No products available. Add a product to get started!</h1>`;
-    localStorage.removeItem("products");
-  } else if (myProducts && myProducts.length > 0) {
-    products.innerHTML = "";
-    const paginatedProducts = myProducts.slice(startIndex, endIndex);
-
-    for (const product of paginatedProducts) {
-      products.style.flexDirection = "column";
-      let div = document.createElement("div");
-      div.className += "product flex list-view-product";
-      div.innerHTML = `
-              <div class="product-top">
-                <div class="product-id">${product.id}</div>
-                <div class="product-image">
-                  <img
-                    src="${product.image}"
-                    alt="image"
-                  />
-                </div>
-              </div>
-              <hr />
-              <div class="product-middle flex">
-                <div class="product-details flex flex-column">
-                  <div class="product-title">
-                    <h3 class="h3">${product.name
-                      .split(" ")
-                      .map(
-                        (element) =>
-                          element[0].toUpperCase() +
-                          element.slice(1).toLowerCase()
-                      )
-                      .join(" ")}</h3>
-                  </div>
-                  <div class="product-description">
-                    <p>${
-                      product.description[0].toUpperCase() +
-                      product.description.slice(1).toLowerCase()
-                    }</p>
-                  </div>
-                  <div class="product-price">
-                    <p>Price:&#8377;<span>${product.price}</span></p>
-                  </div>
-                  <div class="product-quantity">
-                    <p>Quantity:<span>${product.quantity}</span></p>
-                  </div>
-                  <div class="tags flex">
-                  ${tagTemplate(product.tags)}  
-                  </div>
-                </div>
-              </div>
-              <div class="product-bottom flex flex-column">
-                <div class="product-bottom-left">
-                  <button class="btn edit-btn" data-id="${
-                    product.id
-                  }" onclick="fillTheForm(${product.id})">Edit</button>
-                </div>
-                <div class="product-bottom-right">
-                  <button class="btn delete-btn" data-id="${
-                    product.id
-                  }" onclick="deleteProduct(event)">Delete</button>
-                </div>`;
-      products.appendChild(div);
-    }
   }
 }
 
@@ -120,17 +50,12 @@ function setProduct(event) {
     product.id = productCollection.length + 1;
     productCollection.push(product);
 
-    const productsPerPage = 10;
     currentPage = Math.ceil(productCollection.length / productsPerPage);
   }
 
   productForm.reset();
   localStorage.setItem("products", JSON.stringify(productCollection));
-  if (viewButtons[0].classList.contains("list-view-activated")) {
-    getDataInListView();
-  } else {
-    getData();
-  }
+  getData();
   managePagination();
 }
 
@@ -157,9 +82,7 @@ function fillTheForm(i) {
   formInputs[1].focus();
 }
 
-function getData() {
-  let myProducts = JSON.parse(localStorage.getItem("products"));
-  const productsPerPage = 10;
+function getData(myProducts = JSON.parse(localStorage.getItem("products"))) {
   const startIndex = (currentPage - 1) * productsPerPage;
   const endIndex = currentPage * productsPerPage;
 
@@ -169,12 +92,67 @@ function getData() {
   } else if (myProducts && myProducts.length > 0) {
     products.innerHTML = "";
     const paginatedProducts = myProducts.slice(startIndex, endIndex);
-
+    products.style.flexDirection = ListViewActive ? "column" : "row";
     for (const product of paginatedProducts) {
       let div = document.createElement("div");
-      div.classList.add("product");
-
-      div.innerHTML = `
+      div.className += `product ${
+        ListViewActive ? "flex list-view-product" : ""
+      }`;
+      if (ListViewActive) {
+        div.innerHTML = `
+              <div class="product-top">
+                <div class="product-id">${product.id}</div>
+                <div class="product-image">
+                  <img
+                    src="${product.image}"
+                    alt="image"
+                  />
+                </div>
+              </div>
+              <hr />
+              <div class="product-middle flex">
+                <div class="product-details flex flex-column">
+                  <div class="product-title">
+                    <h3 class="h3">${product.name
+                      .trim()
+                      .split(" ")
+                      .map(
+                        (element) =>
+                          element[0].toUpperCase() +
+                          element.slice(1).toLowerCase()
+                      )
+                      .join(" ")}</h3>
+                  </div>
+                  <div class="product-description">
+                    <p>${
+                      product.description[0].toUpperCase() +
+                      product.description.slice(1).toLowerCase().trim()
+                    }</p>
+                  </div>
+                  <div class="product-price">
+                    <p>Price:&#8377;<span>${product.price}</span></p>
+                  </div>
+                  <div class="product-quantity">
+                    <p>Quantity:<span>${product.quantity}</span></p>
+                  </div>
+                  <div class="tags flex">
+                  ${tagTemplate(product.tags.trim())}  
+                  </div>
+                </div>
+              </div>
+              <div class="product-bottom flex flex-column">
+                <div class="product-bottom-left">
+                  <button class="btn edit-btn" data-id="${
+                    product.id
+                  }" onclick="fillTheForm(${product.id})">Edit</button>
+                </div>
+                <div class="product-bottom-right">
+                  <button class="btn delete-btn" data-id="${
+                    product.id
+                  }" onclick="deleteProduct(event)">Delete</button>
+                </div>`;
+      } else {
+        div.innerHTML = `
               <div class="product-top">
                 <div class="product-id">${product.id}</div>
                 <div class="product-image flex flex-center">
@@ -189,6 +167,7 @@ function getData() {
                 <div class="product-details flex flex-column">
                   <div class="product-title">
                     <h3 class="h3">${product.name
+                      .trim()
                       .split(" ")
                       .map(
                         (element) =>
@@ -200,7 +179,7 @@ function getData() {
                   <div class="product-description flex">
                     <p>${
                       product.description[0].toUpperCase() +
-                      product.description.slice(1).toLowerCase()
+                      product.description.slice(1).toLowerCase().trim()
                     }</p>
                   </div>
                   <div class="product-price">
@@ -210,7 +189,7 @@ function getData() {
                     <p>Quantity:<span>${product.quantity}</span></p>
                   </div>
                   <div class="tags flex">
-                  ${tagTemplate(product.tags)}  
+                  ${tagTemplate(product.tags.trim())}  
                   </div>
                 </div>
               </div>
@@ -225,6 +204,7 @@ function getData() {
                     product.id
                   }" onclick="deleteProduct(event)">Delete</button>
                 </div>`;
+      }
       products.appendChild(div);
     }
   }
@@ -244,11 +224,7 @@ function deleteProduct(event) {
     localStorage.setItem("products", JSON.stringify(productCollection));
     productForm.reset();
     setID();
-    if (viewButtons[0].classList.contains("list-view-activated")) {
-      getDataInListView();
-    } else {
-      getData();
-    }
+    getData();
     managePagination();
   }
 }
@@ -351,11 +327,7 @@ function searchProduct(event) {
   let searchInput = event.target.value.toLowerCase().trim();
 
   if (searchInput === "") {
-    if (viewButtons[0].classList.contains("list-view-activated")) {
-      getDataInListView();
-    } else {
-      getData();
-    }
+    getData();
   } else {
     const filteredProducts = productCollection.filter((product) => {
       const nameMatch = product.name.toLowerCase().includes(searchInput);
@@ -364,124 +336,7 @@ function searchProduct(event) {
       return nameMatch || tagsMatch;
     });
 
-    if (filteredProducts.length === 0) {
-      products.innerHTML = `<h1>No matching products found.</h1>`;
-    } else {
-      products.innerHTML = "";
-      for (const product of filteredProducts) {
-        let div = document.createElement("div");
-        div.classList.add("product");
-
-        if (viewButtons[0].classList.contains("list-view-activated")) {
-          products.style.flexDirection = "column";
-          div.className += " flex list-view-product";
-          div.innerHTML = `
-              <div class="product-top">
-                <div class="product-id">${product.id}</div>
-                <div class="product-image">
-                  <img
-                    src="${product.image}"
-                    alt="image"
-                  />
-                </div>
-              </div>
-              <hr />
-              <div class="product-middle flex">
-                <div class="product-details flex flex-column">
-                  <div class="product-title">
-                    <h3 class="h3">${product.name
-                      .split(" ")
-                      .map(
-                        (element) =>
-                          element[0].toUpperCase() +
-                          element.slice(1).toLowerCase()
-                      )
-                      .join(" ")}</h3>
-                  </div>
-                  <div class="product-description">
-                    <p>${
-                      product.description[0].toUpperCase() +
-                      product.description.slice(1).toLowerCase()
-                    }</p>
-                  </div>
-                  <div class="product-price">
-                    <p>Price:&#8377;<span>${product.price}</span></p>
-                  </div>
-                  <div class="product-quantity">
-                    <p>Quantity:<span>${product.quantity}</span></p>
-                  </div>
-                  <div class="tags flex">
-                  ${tagTemplate(product.tags)}  
-                  </div>
-                </div>
-              </div>
-              <div class="product-bottom flex flex-column">
-                <div class="product-bottom-left">
-                  <button class="btn edit-btn" data-id="${
-                    product.id
-                  }" onclick="fillTheForm(${product.id})">Edit</button>
-                </div>
-                <div class="product-bottom-right">
-                  <button class="btn delete-btn" data-id="${
-                    product.id
-                  }" onclick="deleteProduct(event)">Delete</button>
-                </div>`;
-        } else {
-          div.innerHTML = `
-              <div class="product-top">
-                <div class="product-id">${product.id}</div>
-                <div class="product-image flex flex-center">
-                  <img
-                    src="${product.image}"
-                    alt="image"
-                  />
-                </div>
-              </div>
-              <hr />
-              <div class="product-middle">
-                <div class="product-details flex flex-column">
-                  <div class="product-title">
-                    <h3 class="h3">${product.name
-                      .split(" ")
-                      .map(
-                        (element) =>
-                          element[0].toUpperCase() +
-                          element.slice(1).toLowerCase()
-                      )
-                      .join(" ")}</h3>
-                  </div>
-                  <div class="product-description flex">
-                    <p>${
-                      product.description[0].toUpperCase() +
-                      product.description.slice(1).toLowerCase()
-                    }</p>
-                  </div>
-                  <div class="product-price">
-                    <p>Price:&#8377;<span>${product.price}</span></p>
-                  </div>
-                  <div class="product-quantity">
-                    <p>Quantity:<span>${product.quantity}</span></p>
-                  </div>
-                  <div class="tags flex">
-                  ${tagTemplate(product.tags)}  
-                  </div>
-                </div>
-              </div>
-              <div class="product-bottom flex">
-                <div class="product-bottom-left">
-                  <button class="btn edit-btn" data-id="${
-                    product.id
-                  }" onclick="fillTheForm(${product.id})">Edit</button>
-                </div>
-                <div class="product-bottom-right">
-                  <button class="btn delete-btn" data-id="${
-                    product.id
-                  }" onclick="deleteProduct(event)">Delete</button>
-                </div>`;
-        }
-        products.appendChild(div);
-      }
-    }
+    getData(filteredProducts);
   }
 }
 
@@ -500,22 +355,14 @@ function sortData(sortBy) {
     productCollection.sort((a, b) => a.name.localeCompare(b.name));
     localStorage.setItem("products", JSON.stringify(productCollection));
     setID();
-    if (viewButtons[0].classList.contains("list-view-activated")) {
-      getDataInListView();
-    } else {
-      getData();
-    }
+    getData();
   }
 
   if (sortBy === "price") {
     productCollection.sort((a, b) => parseInt(a.price) - parseInt(b.price));
     localStorage.setItem("products", JSON.stringify(productCollection));
     setID();
-    if (viewButtons[0].classList.contains("list-view-activated")) {
-      getDataInListView();
-    } else {
-      getData();
-    }
+    getData();
   }
 }
 
@@ -547,20 +394,16 @@ function managePagination() {
   let paginationDiv = document.querySelector(".pagination");
   if (!paginationDiv) {
     paginationDiv = document.createElement("div");
-    paginationDiv.className = "pagination flex fle x-center";
+    paginationDiv.className = "pagination flex flex-center";
     products.parentElement.appendChild(paginationDiv);
   }
 
   paginationDiv.innerHTML = `
-    <div class="previous-page-btn page-btn ${
-      currentPage === 1 ? "disabled" : ""
-    }" onclick="changePage(-1)">
+    <div class="previous-page-btn page-btn" onclick="changePage(-1)">
       <i class="fa-solid fa-less-than"></i>
     </div>
     ${managePages(noOfPages)}
-    <div class="next-page-btn page-btn ${
-      currentPage === noOfPages ? "disabled" : ""
-    }" onclick="changePage(1)">
+    <div class="next-page-btn page-btn" onclick="changePage(1)">
       <i class="fa-solid fa-greater-than"></i>
     </div>`;
 }
@@ -583,20 +426,12 @@ function changePage(direction) {
   } else if (currentPage > Math.ceil(productCollection.length / 10)) {
     currentPage = Math.ceil(productCollection.length / 10);
   }
-  if (viewButtons[0].classList.contains("list-view-activated")) {
-    getDataInListView();
-  } else {
-    getData();
-  }
+  getData();
   managePagination();
 }
 
 function gotoPage(page) {
   currentPage = page;
-  if (viewButtons[0].classList.contains("list-view-activated")) {
-    getDataInListView();
-  } else {
-    getData();
-  }
+  getData();
   managePagination();
 }
